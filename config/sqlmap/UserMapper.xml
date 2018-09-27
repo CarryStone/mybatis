@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+ <select id="findUserById" parameterType="int" resultType="user">
+    select * from tu_baseinfo where user_id = #{id}
+ </select>
+ 
+ <select id="findUserByUserName" parameterType="String" resultType="user">
+    select * from tu_baseinfo where name like '%${value}%'
+ </select> 
+ 
+ <insert id="insertUser" parameterType="user">
+    insert into tu_baseinfo (name,sex,age,address,createdate) 
+    values(#{name},#{sex},#{age},#{address},#{createdate})
+ </insert>
+ 
+ <update id="updateUser" parameterType="user">
+   update tu_baseinfo set name = #{name} where user_id = #{id}
+ </update>
+ 
+ <delete id="deleteUser" parameterType="String">
+  delete from tu_baseinfo where name = #{name}
+ </delete>
+ 
+ <select id="findUserList" parameterType="user"
+ resultType="user">
+ select * from tu_baseinfo
+ <where>
+    <if test="sex!=null and sex!=''">
+        and tu_baseinfo.sex = #{sex}
+    </if>
+    <if test="name!=null and name!=''">
+        and tu_baseinfo.name like '%${name}%'
+    </if>
+ </where>
+ </select>
+ 
+</mapper>

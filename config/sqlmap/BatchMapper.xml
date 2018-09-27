@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 使用Mapper动态代理，namespace定义为代理接口的路径 -->
+<mapper namespace="cn.com.mybatis.test.CustomerMapper">
+<!-- 二级缓存 -->
+<cache/>
+ <resultMap type="cn.com.mybatis.po.Batch" id="BatchResultMap">
+   <id column="batch_id" property="batch_id" />
+   <result column="cus_id" property="cus_id" />
+   <result column="number" property="number" />
+   <result column="createtime" property="createtime" />
+   <result column="note" property="note" />
+   <association property="customer" javaType="cn.com.mybatis.po.Customer">
+    <id column="cus_id" property="cus_id" />
+    <result column="username" property="username" />
+    <result column="acno" property="acno" />
+    <result column="gender" property="gender" />
+    <result column="phone" property="phone" />
+   </association>
+   <collection property="batchdetails" ofType="cn.com.mybatis.po.BatchDetail">
+   <id column="id" property="id" />
+   <result column="batch_id" property="batch_id" />
+   <result column="product_id" property="product_id" />
+   <result column="product_num" property="product_num" />
+   
+   <association property="fp" javaType="cn.com.mybatis.po.FinacialProduct">
+    <id column="product_id" property="product_id" />
+    <result column="name" property="name" />
+    <result column="price" property="price" />
+    <result column="detail" property="detail" />
+    <result column="pic" property="pic" />
+    <result column="investtime" property="investtime" />
+   </association>
+   </collection>
+ </resultMap>
+ <select id="findBatchAndBatchDetail" resultMap="BatchResultMap">
+    select batch.*,
+    customer.username,
+	customer.acno,
+	batchdetail.product_id,
+	batchdetail.product_num,
+	finacial_products.name,
+	finacial_products.detail
+	from batch,
+	customer,
+	batchdetail,
+	finacial_products
+	where batch.cus_id = customer.cus_id
+	and batch.batch_id = batchdetail.batch_id 
+	and batchdetail.product_id = finacial_products.product_id
+ </select>
+</mapper>
